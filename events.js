@@ -20,15 +20,18 @@ let sub = pool.sub(
 
 sub.on('event', event => {
     let j = JSON.parse(event.content)
-    let idents = Object.keys(j.identity);
-    document.getElementById("content").replaceChildren()
-    idents.forEach(account => {
-        console.log(j.identity[account])
-        document.getElementById("content").appendChild(makePerson(j.identity[account]))
+    enMapState(event)
+    waitForStateReady(()=>{
+        if (storedPubkey === "" || !storedPubkey) {
+            window.nostr.getPublicKey().then(x=>{
+                storedPubkey = x
+            })
+        }
+        document.getElementById("content").replaceChildren()
+        identities().forEach(i => {
+            document.getElementById("content").appendChild(makePerson(i))
+        })
     })
-
-    // this will only be called once the first time the event is received
-    // ...
 })
 
 function makePerson(identity) {
@@ -36,7 +39,7 @@ function makePerson(identity) {
     p.appendChild(makeH3(identity.Name))
     p.appendChild(makeItem("About", identity.About))
     p.appendChild(makeItem("Account", identity.Account))
-    p.appendChild(makeItem("Added By", identity.Account))
+    p.appendChild(makeItem("Added By", identity.UniqueSovereignBy))
     return p
 }
 
