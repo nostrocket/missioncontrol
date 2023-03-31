@@ -254,15 +254,13 @@ function makeLabel(name) {
 
 function setBio(name, about, pubkey) {
     if ((name.length > 0) || (about.length > 0)) {
-        sequence = 0
-        if (identityObjects.get(pubkey) !== undefined) {
-            sequence = identityObjects.get(pubkey).Sequence
-        }
-        sequence++
-        content = JSON.stringify({name: name, about: about, sequence: sequence})
-        sendEventToMindmachine(content, "", 640400, pubkey).then(x =>{
+
+        content = JSON.stringify({name: name, about: about})
+        console.log(content)
+        tags = [["r", currentStateId, "", "reply"]]
+        sendEventToRocket(content, tags, 640400, pubkey).then(x =>{
             location.reload()
-            //if (reload) {location.reload()}
+            // if (reload) {location.reload()}
         })
     } else {
         console.log("username and bio can't both be empty")
