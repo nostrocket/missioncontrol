@@ -1,4 +1,4 @@
-var mindmachineSocket = new WebSocket(relay);
+// var mindmachineSocket = new WebSocket(relays);
 async function signAsynchronously(event) {
     event.id = window.NostrTools.getEventHash(event)
     if (!window.nostr) {
@@ -27,10 +27,11 @@ function makeEvent(note, tags, kind, pubkey) {
 let event = {
     kind: kind,
     pubkey: pubkey,
-    created_at: Math.floor(Date.now() / 1000),
+    created_at: now,
     tags: tags,
     content: note
   }
+  console.log(event)
   event.id = window.NostrTools.getEventHash(event)
 return event
 }
@@ -41,12 +42,17 @@ async function sendEventToRocket(content, tags, kind, pubkey) {
     } else {
         et = makeEvent(content, tags, kind, pubkey)
     }
-    console.log(et)
-    let pubs = pool.publish(relays, et)
+    console.log(et,pool)
+    let pubs = pool.publish([...relays, 'wss://nostr.688.org'], et)
     pubs.on('ok', () => {
         // this may be called multiple times, once for every relay that accepts the event
         // ...
         console.log("published")
+        return 'ok!'
+      })
+    pubs.on('failed', reason => {
+        console.log(`failed to publish to {relay.url}: ${reason}`)
+        return 'failed><'
       })
 
 }

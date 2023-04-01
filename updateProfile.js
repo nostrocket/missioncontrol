@@ -1,3 +1,6 @@
+let reload = false
+
+
 function updateAccountDetails() {
     form = document.createElement("div")
     form.appendChild(usernameAndBioForm())
@@ -259,8 +262,10 @@ function setBio(name, about, pubkey) {
         console.log(content)
         tags = [["r", currentStateId, "", "reply"]]
         sendEventToRocket(content, tags, 640400, pubkey).then(x =>{
-            location.reload()
-            // if (reload) {location.reload()}
+            // location.reload()
+            console.log(x,'undefined?')
+            if (reload) {location.reload()}
+
         })
     } else {
         console.log("username and bio can't both be empty")
