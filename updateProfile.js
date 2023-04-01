@@ -78,7 +78,6 @@ function updateUsernameAndBioForm(div,haveExistingKind0,username,about){
     div.innerHTML = ""
     div.appendChild(makeH3("Create or modify your Nostrocket profile"))
     div.appendChild(makeParagraph("* Nostrocket usernames **cannot** be changed once set for your Pubkey   \n* Nostrocket usernames **must** be unique   \n* Protocol: [Non-fungible Identity](superprotocolo://b66541b20c8a05260966393938e2af296c1a39ca5aba8e21bd86fcce2db72715)"))
-    console.log(haveExistingKind0,"This is important")
     if (haveExistingKind0) {
         div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(storedPubkey).name + "**_ now."))
     }
@@ -99,7 +98,6 @@ function usernameAndBioForm() {
         // no existing identity, try to get kind0 from other relays
         getKind0Object(storedPubkey,relays = ["wss://relay.damus.io"])
         waitForKind0Ready(function(){
-            console.log('?????????/')
             if (kind0Objects.get(storedPubkey) !== undefined) {
             
                 if (kind0Objects.get(storedPubkey).name.length > 0) {
@@ -113,11 +111,9 @@ function usernameAndBioForm() {
                 }
                 updateUsernameAndBioForm(div,haveExistingKind0,username,about)
             }
-            div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(storedPubkey).name + "**_ now."))
         })
 
     } else if (pubkeyId.length === 1){
-        console.log(2)
         haveExistingIdentity = true
         about = pubkeyId[0].About
         username = pubkeyId[0].Name
