@@ -1,0 +1,5 @@
+- [ ]  Implement window.nostr to sign events
+- [ ]  Fetch kind 0 events by the signed-in pubkey so that we have their latest username and bio data
+- [ ] Create a form and pre-populate it with the user's existing username and bio from the current nostrocket state, or if it's not in there then take it from their latest kind 0 event
+- [ ] Create, sign and send an event (to nostr.688.org) with the user's username and bio
+- [ ] Nostrocket usernames are permanent and cannot be changed once set, warn user about this and report error if user tries to change their name once set
