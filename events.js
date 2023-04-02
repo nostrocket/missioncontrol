@@ -20,29 +20,96 @@ let sub = pool.sub(
 )
 
 
+
 sub.on('event', event => {
     let j = JSON.parse(event.content)
     enMapState(event)
     waitForStateReady(()=>{
-        // if (pubkey === "" || !pubkey) {
+        // if (storedPubkey === "" || !storedPubkey) {
         //     window.nostr.getPublicKey().then(x=>{
-        //         pubkey = x
+        //         storedPubkey = x
         //     })
         // }
         document.getElementById("content").replaceChildren()
-        
+        document.getElementById("content").appendChild(makeIdentityLayout())
         identities().forEach(i => {
-            document.getElementById("content").appendChild(makePerson(i))
+          
+        const sovereignBy = i.UniqueSovereignBy;
+        if (sovereignBy === null || sovereignBy === '') {
+          document.getElementById("right-column").appendChild(makePerson(i));
+        }else {
+            document.getElementById("left-column").appendChild(makePerson(i));
+        }
         })
     })
 })
+function makeIdentityLayout(){
+    let d = document.createElement("div")
+    d.className = "columns-wrapper"
+    let left = document.createElement("div")
+    left.id = "left-column"
+    left.innerHTML = '<h2>Identity Tree</h2>\
+    <ul id="provedIdentities"></ul>'
+    let right = document.createElement("div")
+    right.id = "right-column"
+    right.innerHTML = '<h2>Accounts waiting to be added</h2>\
+    <ul id="unprovedIdentities"></ul>'
+    d.appendChild(left)
+    d.appendChild(right)
+    return d
+}
+
+function createAddButton(identity,onclick) {
+    // Create a button element
+    const button = document.createElement("button");
+    button.id = identity.Account+'_button'
+    // Set some properties for the button
+    button.textContent = "Add";
+    button.style.backgroundColor = "blue";
+    button.style.color = "white";
+    
+    // Add an event listener to the button
+    button.onclick = function() { 
+    if (pubkeyInIdentity(pubkey)) {
+        const USB = identities().find(x => x.Account === pubkey).UniqueSovereignBy
+        if (USB != null && USB != '') {
+            const Accunt = this.id.substring(0, this.id.indexOf("_"));
+            const target = identities().find(x => x.Account === Accunt)
+            
+            content = JSON.stringify({Target: target, Maintainer: false,USH:true,Character:false})
+            tags = makeTags(pubkey)
+            sendEventToRocket(content, tags, 640400, pubkey).then(x =>{
+                // location.reload()
+                console.log(x,'undefined?')
+            if (reload) {location.reload()}
+
+            });
+        }else{
+            alert("You need to be at Identity Tree first to add others identity")
+            return
+        }
+    } else{
+        alert("You need to be at Identity Tree first to add others identity")
+        return 
+    }  
+    
+}
+    
+    // Return the button object
+    return button;
+  }
+
 
 function makePerson(identity) {
     let p = document.createElement("div")
+    p.id = identity.Name
     p.appendChild(makeH3(identity.Name))
     p.appendChild(makeItem("About", identity.About))
     p.appendChild(makeItem("Account", identity.Account))
     p.appendChild(makeItem("Added By", identity.UniqueSovereignBy))
+    if (identity.UniqueSovereignBy === null || identity.UniqueSovereignBy === ''){
+        p.appendChild(createAddButton(identity))
+    }
     return p
 }
 

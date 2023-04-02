@@ -1,0 +1,13 @@
+.columns-wrapper {
+    width: 100%;
+  }
+  
+  #left-column {
+    float: left;
+    width: 45%;
+  }
+  
+  #right-column {
+    float: left;
+    width: 45%;
+  }
