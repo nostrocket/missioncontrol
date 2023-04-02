@@ -33,17 +33,25 @@ let event = {
   }
   console.log(event)
   event.id = window.NostrTools.getEventHash(event)
-return event
+  let signed =  window.nostr.signEvent(event);
+
+return signed
 }
 async function sendEventToRocket(content, tags, kind, pubkey) {
     let et
+
     if (typeof pubkey !== "string") {
         et = makeEvent(content, tags, kind, storedPubkey)
     } else {
         et = makeEvent(content, tags, kind, pubkey)
     }
-    console.log(et,pool)
-    let pubs = pool.publish([...relays, 'wss://nostr.688.org'], et)
+    et.then((result)=>{publish(result)})
+
+
+}
+function publish(signed){
+    console.log(signed)
+    let pubs = pool.publish([...relays, 'wss://nostr.688.org'], signed)
     pubs.on('ok', () => {
         // this may be called multiple times, once for every relay that accepts the event
         // ...

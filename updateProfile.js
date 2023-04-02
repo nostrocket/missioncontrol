@@ -1,12 +1,14 @@
 let reload = false
-
+let IdentityRoot = "0a73208becd0b1a9d294e6caef14352047ab44b848930e6979937fe09effaf71"
+let IgnitionEvent = "fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c"
+let ReplyRoot = "24c30ad7f036ed49379b5d1209836d1ff6795adb34da2d3e4cabc47dc9dfef21"
 
 function updateAccountDetails() {
     form = document.createElement("div")
     form.appendChild(usernameAndBioForm())
     form.appendChild(bioButtons(function () {
         if (document.getElementById( 'name input' ).valueOf().readOnly) {
-            setBio( "", document.getElementById( 'about input' ).value, storedPubkey )
+            setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value, storedPubkey )
             //location.reload()
         } else {
             validateUnique(document.getElementById( 'name input' ).value).then(res => {
@@ -286,13 +288,11 @@ function makeLabel(name) {
 }
 
 
-function setBio(name, about, pubkey) {
+async function setBio(name, about, pubkey) {
     if ((name.length > 0) || (about.length > 0)) {
-
         content = JSON.stringify({name: name, about: about})
-        console.log(content)
-        tags = [["r", currentStateId, "", "reply"]]
-        sendEventToRocket(content, tags, 640400, pubkey).then(x =>{
+        tags = makeTags(pubkey)
+        await sendEventToRocket(content, tags, 640400, pubkey).then(x =>{
             // location.reload()
             console.log(x,'undefined?')
             if (reload) {location.reload()}
@@ -302,6 +302,22 @@ function setBio(name, about, pubkey) {
         console.log("username and bio can't both be empty")
     }
 }
+function makeTags(pubkey){
+    tags = [["e", IgnitionEvent, "", "root"]]
+    tags.push(["e", IdentityRoot, "", "reply"])
+    if (pubkeyInIdentity(pubkey)){
+        tags.push(["r", getReplyByAccount(pubkey), "", "reply"])
+    } else {
+        tags.push(["r", ReplyRoot, "", "reply"])
+    }
+    return tags
+}
+// nostr.Tag{"r",
+// "24c30ad7f036ed49379b5d1209836d1ff6795adb34da2d3e4cabc47dc9dfef21",
+// "",
+// "reply"},
+// nostr.Tag{"e", "fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c", "", "root"},
+// nostr.Tag{"e", "0a73208becd0b1a9d294e6caef14352047ab44b848930e6979937fe09effaf71", "", "reply"},
 
 function spacer() {
     s = document.createElement("span")

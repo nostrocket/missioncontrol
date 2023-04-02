@@ -1,6 +1,6 @@
 let stateReady = false
 let currentState
-let currentStateId
+
 
 function waitForStateReady(callback) {
     var interval = setInterval(function() {
@@ -14,7 +14,6 @@ function waitForStateReady(callback) {
 function enMapState(e) {
     state = JSON.parse(e.content)
     currentState = state
-    currentStateId = e.id
     stateReady = true
 }
 
@@ -29,6 +28,19 @@ function identities() {
     }
     return i
 }
+function pubkeyInIdentity(pubkey) {
+    if (currentState.identity.hasOwnProperty(pubkey)) {
+        return true
+    } else {
+        return false
+    }
+
+}
+function getReplyByAccount(account) {
+    return currentState.replay[account]
+}
+
+
 
 
 
