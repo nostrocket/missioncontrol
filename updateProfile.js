@@ -8,12 +8,12 @@ function updateAccountDetails() {
     form.appendChild(usernameAndBioForm())
     form.appendChild(bioButtons(function () {
         if (document.getElementById( 'name input' ).valueOf().readOnly) {
-            setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value, storedPubkey )
+            setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value, pubkey )
             //location.reload()
         } else {
             validateUnique(document.getElementById( 'name input' ).value).then(res => {
                 if (res) {
-                    setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value, storedPubkey )
+                    setBio( document.getElementById( 'name input' ).value, document.getElementById( 'about input' ).value, pubkey )
                     //location.reload()
                 } else {
                     console.log()
@@ -69,7 +69,7 @@ function createUsernameAndBioForm(div,haveExistingKind0,username,about){
     div.appendChild(makeParagraph("* Nostrocket usernames **cannot** be changed once set for your Pubkey   \n* Nostrocket usernames **must** be unique   \n* Protocol: [Non-fungible Identity](superprotocolo://b66541b20c8a05260966393938e2af296c1a39ca5aba8e21bd86fcce2db72715)"))
     console.log(haveExistingKind0,"This is important")
     if (haveExistingKind0) {
-        div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(storedPubkey).name + "**_ now."))
+        div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(pubkey).name + "**_ now."))
     }
     div.appendChild(makeTextInput("Username", "Name or Pseudonym", "name input", 20, username))
 
@@ -81,7 +81,7 @@ function updateUsernameAndBioForm(div,haveExistingKind0,username,about){
     div.appendChild(makeH3("Create or modify your Nostrocket profile"))
     div.appendChild(makeParagraph("* Nostrocket usernames **cannot** be changed once set for your Pubkey   \n* Nostrocket usernames **must** be unique   \n* Protocol: [Non-fungible Identity](superprotocolo://b66541b20c8a05260966393938e2af296c1a39ca5aba8e21bd86fcce2db72715)"))
     if (haveExistingKind0) {
-        div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(storedPubkey).name + "**_ now."))
+        div.appendChild(makeParagraph("Submit this form to claim _**" + kind0Objects.get(pubkey).name + "**_ now."))
     }
     div.appendChild(makeTextInput("Username", "Name or Pseudonym", "name input", 20, username))
 
@@ -94,21 +94,18 @@ function usernameAndBioForm() {
     let about = ""
     let haveExistingIdentity = false
     let haveExistingKind0 = false
-    let pubkeyId = identities().filter(item => item.Account === storedPubkey)
-    console.log("??", pubkeyId )
+    let pubkeyId = identities().filter(item => item.Account === pubkey)
     if (pubkeyId.length === 0) {
         // no existing identity, try to get kind0 from other relays
-        getKind0Object(storedPubkey,relays = ["wss://relay.damus.io"])
+        getKind0Object(pubkey,relays = ["wss://relay.damus.io"])
         waitForKind0Ready(function(){
-            if (kind0Objects.get(storedPubkey) !== undefined) {
-            
-                if (kind0Objects.get(storedPubkey).name.length > 0) {
-                    username = kind0Objects.get(storedPubkey).name
-                    console.log(2)
+            if (kind0Objects.get(pubkey) !== undefined) {
+                if (kind0Objects.get(pubkey).name.length > 0) {
+                    username = kind0Objects.get(pubkey).name
                     haveExistingKind0 = true
                 }
-                if (kind0Objects.get(storedPubkey).about.length > 0) {
-                    about = kind0Objects.get(storedPubkey).about
+                if (kind0Objects.get(pubkey).about.length > 0) {
+                    about = kind0Objects.get(pubkey).about
                     haveExistingKind0 = true
                 }
                 updateUsernameAndBioForm(div,haveExistingKind0,username,about)
@@ -120,7 +117,7 @@ function usernameAndBioForm() {
         about = pubkeyId[0].About
         username = pubkeyId[0].Name
     } else {
-        alert("Error: multiple identities found for this pubkey. Please contact Rocket admin for support.")
+        alert("Error: multiple identities found for this pubkey.")
     }
 
 
@@ -200,7 +197,7 @@ function makeTextInput(label, placeholder, id, maxlength, existing) {
     if (label === "Username") {
         var userameIsAlreadySet = false
         identities().forEach(function (v) {
-            if (v.Account === storedPubkey) {
+            if (v.Account === pubkey) {
                 if (v.Name.length > 0) {
                     textInput.value = v.Name
                     textInput.readOnly = true

@@ -24,9 +24,9 @@ sub.on('event', event => {
     let j = JSON.parse(event.content)
     enMapState(event)
     waitForStateReady(()=>{
-        // if (storedPubkey === "" || !storedPubkey) {
+        // if (pubkey === "" || !pubkey) {
         //     window.nostr.getPublicKey().then(x=>{
-        //         storedPubkey = x
+        //         pubkey = x
         //     })
         // }
         document.getElementById("content").replaceChildren()

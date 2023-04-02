@@ -41,7 +41,7 @@ async function sendEventToRocket(content, tags, kind, pubkey) {
     let et
 
     if (typeof pubkey !== "string") {
-        et = makeEvent(content, tags, kind, storedPubkey)
+        et = makeEvent(content, tags, kind, pubkey)
     } else {
         et = makeEvent(content, tags, kind, pubkey)
     }

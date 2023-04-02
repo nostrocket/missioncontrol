@@ -1,18 +1,12 @@
-let storedPubkey = ""
+let pubkey = ""
 
-
-getMuhPubkey().then(pk => {
-    console.log(3)
-    storedPubkey = pk
-})
-async function getMuhPubkey() {
-    if (window.nostr){
+setTimeout(function(){
+    if (window.nostr) {
         window.nostr.getPublicKey().then(x=>{
-            return x
+            console.log("Current pubkey is: ", x);
+            pubkey = x
         })
+    } else {
+        alert("You can look but you can't touch. Please install a NIP-07 nostr signing browser extension (such as GetAlby or Nos2x) if you want to interact with Nostrocket!")
     }
-    else {
-        alert("Please install NIP-07 extension to interact with the Nostrocket~")
-    }
-
-}
+},100)
