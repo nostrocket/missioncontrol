@@ -24,11 +24,11 @@ sub.on('event', event => {
     let j = JSON.parse(event.content)
     enMapState(event)
     waitForStateReady(()=>{
-        if (storedPubkey === "" || !storedPubkey) {
-            window.nostr.getPublicKey().then(x=>{
-                storedPubkey = x
-            })
-        }
+        // if (storedPubkey === "" || !storedPubkey) {
+        //     window.nostr.getPublicKey().then(x=>{
+        //         storedPubkey = x
+        //     })
+        // }
         document.getElementById("content").replaceChildren()
         
         identities().forEach(i => {

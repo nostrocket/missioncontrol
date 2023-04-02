@@ -6,7 +6,13 @@ getMuhPubkey().then(pk => {
     storedPubkey = pk
 })
 async function getMuhPubkey() {
-    window.nostr.getPublicKey().then(x=>{
-        return x
-    })
+    if (window.nostr){
+        window.nostr.getPublicKey().then(x=>{
+            return x
+        })
+    }
+    else {
+        alert("Please install NIP-07 extension to interact with the Nostrocket~")
+    }
+
 }
