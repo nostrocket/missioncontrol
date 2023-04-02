@@ -37,18 +37,6 @@ let event = {
 
 return signed
 }
-async function sendEventToRocket(content, tags, kind, pubkey) {
-    let et
-
-    if (typeof pubkey !== "string") {
-        et = makeEvent(content, tags, kind, pubkey)
-    } else {
-        et = makeEvent(content, tags, kind, pubkey)
-    }
-    et.then((result)=>{publish(result)})
-
-
-}
 function publish(signed){
     console.log(signed)
     let pubs = pool.publish([...relays, 'wss://nostr.688.org'], signed)
@@ -64,4 +52,19 @@ function publish(signed){
       })
 
 }
+
+async function sendEventToRocket(content, tags, kind, pubkey) {
+    let et
+
+    if (typeof pubkey !== "string") {
+        et = makeEvent(content, tags, kind, pubkey)
+    } else {
+        et = makeEvent(content, tags, kind, pubkey)
+    }
+    et.then((result)=>{publish(result)})
+
+
+}
+
+
 
