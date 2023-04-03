@@ -71,14 +71,14 @@ function createAddButton(identity,onclick) {
     // Add an event listener to the button
     button.onclick = function() { 
     if (pubkeyInIdentity(pubkey)) {
-        const USB = identities().find(x => x.Account === pubkey).UniqueSovereignBy
-        if (USB != null && USB != '') {
-            const Accunt = this.id.substring(0, this.id.indexOf("_"));
-            const target = identities().find(x => x.Account === Accunt)
+        const USH = identities().find(x => x.Account === pubkey).UniqueSovereignBy
+        if (USH != null && USH !== '') {
+            const Account = this.id.substring(0, this.id.indexOf("_"));
+            const target = identities().find(x => x.Account === Account)
             
             content = JSON.stringify({Target: target, Maintainer: false,USH:true,Character:false})
             tags = makeTags(pubkey)
-            sendEventToRocket(content, tags, 640400, pubkey).then(x =>{
+            sendEventToRocket(content, tags, 640402, pubkey).then(x =>{
                 // location.reload()
                 console.log(x,'undefined?')
             if (reload) {location.reload()}
