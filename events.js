@@ -76,7 +76,7 @@ function createAddButton(identity,onclick) {
             const Account = this.id.substring(0, this.id.indexOf("_"));
             const target = identities().find(x => x.Account === Account)
             
-            content = JSON.stringify({target: target, maintainer: false,ush:true,character:false})
+            content = JSON.stringify({target: target.Account, maintainer: false,ush:true,character:false})
             tags = makeTags(pubkey)
             sendEventToRocket(content, tags, 640402, pubkey).then(x =>{
                 // location.reload()
@@ -85,11 +85,11 @@ function createAddButton(identity,onclick) {
 
             });
         }else{
-            alert("You need to be at Identity Tree first to add others identity")
+            alert("You need to be at Identity Tree first to add others identity.")
             return
         }
     } else{
-        alert("You need to be at Identity Tree first to add others identity")
+        alert("You need to be at Identity Tree first to add others identity.")
         return 
     }  
     
