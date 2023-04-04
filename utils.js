@@ -61,7 +61,10 @@ async function sendEventToRocket(content, tags, kind, pubkey) {
     } else {
         et = makeEvent(content, tags, kind, pubkey)
     }
-    et.then((result)=>{publish(result)})
+    et.then((result)=>{
+        publish(result);
+        return result
+    })
 
 
 }

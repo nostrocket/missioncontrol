@@ -80,7 +80,7 @@ function createAddButton(identity,onclick) {
             const target = identities().find(x => x.Account === Account)
             
             content = JSON.stringify({target: target.Account, maintainer: false,ush:true,character:false})
-            tags = makeTags(pubkey)
+            tags = makeTags(pubkey, "identity")
             sendEventToRocket(content, tags, 640402, pubkey).then(x =>{
                 // location.reload()
                 console.log(x,'undefined?')
