@@ -34,13 +34,16 @@ function renderIdentityLayout() {
         //         storedPubkey = x
         //     })
         // }
+        
+        const rootNode = identities().find(node => node.UniqueSovereignBy === '1Humanityrvhus5mFWRRzuJjtAbjk2qwww');
+        const USHIdentities = identities().filter(x => x.UniqueSovereignBy !== null && x.UniqueSovereignBy !== '')
+        document.getElementById("left-column").innerHTML = renderTree(USHIdentities, rootNode)
+       
         identities().forEach(i => {
 
             const sovereignBy = i.UniqueSovereignBy;
             if (sovereignBy === null || sovereignBy === '') {
                 document.getElementById("right-column").appendChild(makePerson(i));
-            }else {
-                document.getElementById("left-column").appendChild(makePerson(i));
             }
         })
     })
@@ -137,3 +140,20 @@ function makeH3(title) {
     h3.innerText = title
     return h3
 }
+
+function renderTree(data, root) {
+    let result = '';
+    if (root) {
+      result += `<ul><li>${makePerson(root).innerHTML}`;
+      const children = data.filter(child => child.UniqueSovereignBy === root.Account);
+      if (children.length > 0) {
+        result += '<ul>';
+        children.forEach(child => {
+          result += renderTree(data, child);
+        });
+        result += '</ul>';
+      }
+      result += '</li></ul>';
+    }
+    return result;
+  }
