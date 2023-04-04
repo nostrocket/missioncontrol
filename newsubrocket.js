@@ -9,9 +9,35 @@ function newsubrocket() {
         })
     }
     div.appendChild(b)
+    let  shares = Object.keys(currentState.shares);
+    shares.forEach(subrocket => {
+        // console.log(currentState.identity[account])
+        // i.push(currentState.identity[account])
+        div.appendChild(makeSubRocket(subrocket))
+    })
+    
     return div
 }
+function makeSubRocket(subrocketName){
+    let s = document.createElement("div")
+    s.className = "subrocket"
+    s.id = subrocketName
+    let subrocketInfo = currentState.shares[subrocketName]
+    // console.log(subrocketInfo)
+    s.appendChild(makeH3(subrocketName))
+    
+    for (let account in subrocketInfo) {
+        let cap = subrocketInfo[account] 
+        s.appendChild(makeItem("Name",getIdentityByAccount(account).Name))
+        s.appendChild(makeItem("Last Lt Change", cap.LastLtChange))
+        s.appendChild(makeItem("Lead Time", cap.LeadTime))
+        s.appendChild(makeItem("Lead Time Locked Shares", cap.LeadTimeLockedShares))
+        s.appendChild(makeItem("Lead Time Unlocked Shares", cap.LeadTimeUnlockedShares))
+        s.appendChild(makeItem("OP Return Addresses", cap.OpReturnAddresses))
+    }
 
+    return s
+}
 
 async function newSubrocketCapTable(name) {
     if (name.length > 0) {
