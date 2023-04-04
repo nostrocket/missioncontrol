@@ -110,6 +110,7 @@ function makePerson(identity) {
     p.appendChild(makeItem("About", identity.About))
     p.appendChild(makeItem("Account", identity.Account))
     p.appendChild(makeItem("Added By", identity.UniqueSovereignBy))
+    p.appendChild(makeItem("Order", identity.Order))
     if (identity.UniqueSovereignBy === null || identity.UniqueSovereignBy === ''){
         p.appendChild(createAddButton(identity))
     }
