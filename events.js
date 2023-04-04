@@ -10,7 +10,7 @@ let sub = pool.sub(
         {
             //tags: [['#e', 'fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c']]
             "#e": "fd459ea06157e30cfb87f7062ee3014bc143ecda072dd92ee6ea4315a6d2df1c",
-            kinds: [10310]
+            kinds: [10310],
             // authors: [
             //     "b4f36e2a63792324a92f3b7d973fcc33eaa7720aaeee71729ac74d7ba7677675"
             //     //NostrTools.nip19.decode("npub1mygerccwqpzyh9pvp6pv44rskv40zutkfs38t0hqhkvnwlhagp6s3psn5p").data
@@ -22,6 +22,7 @@ let sub = pool.sub(
 sub.on('event', event => {
     let j = JSON.parse(event.content)
     enMapState(event)
+    console.log(event,'10310 event')
     document.getElementById("content").replaceChildren()
     document.getElementById("content").appendChild(renderIdentityLayout())
 })
@@ -110,6 +111,7 @@ function makePerson(identity) {
     p.appendChild(makeItem("About", identity.About))
     p.appendChild(makeItem("Account", identity.Account))
     p.appendChild(makeItem("Added By", identity.UniqueSovereignBy))
+    p.appendChild(makeItem("Order", identity.Order))
     if (identity.UniqueSovereignBy === null || identity.UniqueSovereignBy === ''){
         p.appendChild(createAddButton(identity))
     }
