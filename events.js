@@ -22,6 +22,7 @@ let sub = pool.sub(
 sub.on('event', event => {
     let j = JSON.parse(event.content)
     enMapState(event)
+    console.log(currentState, "state")
     document.getElementById("content").replaceChildren()
     document.getElementById("content").appendChild(renderIdentityLayout())
 })
