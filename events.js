@@ -19,30 +19,33 @@ let sub = pool.sub(
     ]
 )
 
-
-
 sub.on('event', event => {
     let j = JSON.parse(event.content)
     enMapState(event)
+    document.getElementById("content").replaceChildren()
+    document.getElementById("content").appendChild(renderIdentityLayout())
+})
+
+function renderIdentityLayout() {
     waitForStateReady(()=>{
         // if (storedPubkey === "" || !storedPubkey) {
         //     window.nostr.getPublicKey().then(x=>{
         //         storedPubkey = x
         //     })
         // }
-        document.getElementById("content").replaceChildren()
-        document.getElementById("content").appendChild(makeIdentityLayout())
         identities().forEach(i => {
-          
-        const sovereignBy = i.UniqueSovereignBy;
-        if (sovereignBy === null || sovereignBy === '') {
-          document.getElementById("right-column").appendChild(makePerson(i));
-        }else {
-            document.getElementById("left-column").appendChild(makePerson(i));
-        }
+
+            const sovereignBy = i.UniqueSovereignBy;
+            if (sovereignBy === null || sovereignBy === '') {
+                document.getElementById("right-column").appendChild(makePerson(i));
+            }else {
+                document.getElementById("left-column").appendChild(makePerson(i));
+            }
         })
     })
-})
+    return makeIdentityLayout()
+}
+
 function makeIdentityLayout(){
     let d = document.createElement("div")
     d.className = "columns-wrapper"
