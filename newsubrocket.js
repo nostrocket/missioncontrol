@@ -1,21 +1,27 @@
 function newsubrocket() {
     let div = document.createElement("div")
     div.appendChild(makeTextInput("Name", "Subrocket Name", "name input", 20, ""))
+    div.appendChild(makeTextInput("Problem ID", "ID of Problem", "problem input", 64, "e624297b5a66775ee21a2565c023764bf6dc73cbbb0a1579fa5ff40ff50d59cd"))
     let b = document.createElement("button")
     b.innerText = "Do it!"
     b.onclick = function () {
-        newSubrocketCapTable(document.getElementById( 'name input' ).value).then(x => {
-            console.log(x)
+        newSubrocketName(document.getElementById( 'name input' ).value, document.getElementById( 'problem input' ).value).then(x => {
+            publish(x)
+            newSubrocketCapTable(document.getElementById( 'name input' ).value, x.id).then(y => {
+                publish(y)
+            })
         })
+
     }
     div.appendChild(b)
-    let  shares = Object.keys(currentState.shares);
-    shares.forEach(subrocket => {
-        // console.log(currentState.identity[account])
-        // i.push(currentState.identity[account])
-        div.appendChild(makeSubRocket(subrocket))
-    })
-    
+    if (currentState.shares) {
+        let  shares = Object.keys(currentState.shares);
+        shares.forEach(subrocket => {
+            // console.log(currentState.identity[account])
+            // i.push(currentState.identity[account])
+            div.appendChild(makeSubRocket(subrocket))
+        })
+    }
     return div
 }
 function makeSubRocket(subrocketName){
@@ -39,14 +45,32 @@ function makeSubRocket(subrocketName){
     return s
 }
 
-async function newSubrocketCapTable(name) {
-    if (name.length > 0) {
-        content = JSON.stringify({rocket_id: name})
-        tags = makeTags(pubkey, "shares")
-        await sendEventToRocket(content, tags, 640208, pubkey).then(x =>{
-            return x
-        })
+async function newSubrocketName(name, problem) {
+    if (name.length > 3) {
+        content = JSON.stringify({rocket_id: name, problem_id: problem})
+        tags = makeTags(pubkey, "subrockets")
+        let unsigned = makeUnsignedEvent(content, tags, 640600, pubkey)
+        let signed = await signAsynchronously(unsigned)
+        return signed
+        // await sendEventToRocket(content, tags, 640600, pubkey).then(x =>{
+        //     return x
+        // })
     } else {
-        console.log("username and bio can't both be empty")
+        console.log("name is too short")
+    }
+}
+
+async function newSubrocketCapTable(name, r) {
+    if (name.length > 3) {
+        content = JSON.stringify({rocket_id: name})
+        tags = makeTags(pubkey, "shares", r)
+        let unsigned = makeUnsignedEvent(content, tags, 640208, pubkey)
+        let signed = await signAsynchronously(unsigned)
+        return signed
+        // await sendEventToRocket(content, tags, 640208, pubkey).then(x =>{
+        //     return x
+        // })
+    } else {
+        console.log("name is too short")
     }
 }

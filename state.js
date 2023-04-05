@@ -23,7 +23,6 @@ function identities() {
     if (stateReady) {
         let idents = Object.keys(currentState.identity);
         idents.forEach(account => {
-            console.log(currentState.identity[account])
             i.push(currentState.identity[account])
         })
     }

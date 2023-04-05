@@ -18,7 +18,8 @@ async function signAsynchronously(event) {
     }
     return event
 }
-function makeEvent(note, tags, kind, pubkey) {
+
+function makeUnsignedEvent(note, tags, kind, pubkey) {
     var now = Math.floor((new Date().getTime()) / 1000);
     k = 1
     if (kind !== undefined) {
@@ -31,36 +32,29 @@ let event = {
     tags: tags,
     content: note
   }
-  console.log(event)
   event.id = window.NostrTools.getEventHash(event)
-  let signed =  window.nostr.signEvent(event);
-
-return signed
+    return event
 }
+
+
 function publish(signed){
-    console.log(signed)
     let pubs = pool.publish([...relays, 'wss://nostr.688.org'], signed)
     pubs.on('ok', () => {
         // this may be called multiple times, once for every relay that accepts the event
-        // ...
-        console.log("published")
         return 'ok!'
       })
     pubs.on('failed', reason => {
         console.log(`failed to publish to {relay.url}: ${reason}`)
-        return 'failed><'
+        return 'failed'
       })
 
 }
 
-async function sendEventToRocket(content, tags, kind, pubkey) {
-    let et
 
-    if (typeof pubkey !== "string") {
-        et = makeEvent(content, tags, kind, pubkey)
-    } else {
-        et = makeEvent(content, tags, kind, pubkey)
-    }
+
+async function sendEventToRocket(content, tags, kind, pubkey) {
+    let et = makeUnsignedEvent(content, tags, kind, pubkey)
+
     et.then((result)=>{
         publish(result);
         return result

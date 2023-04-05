@@ -22,7 +22,6 @@ let sub = pool.sub(
 sub.on('event', event => {
     let j = JSON.parse(event.content)
     enMapState(event)
-    console.log(currentState, "state")
     document.getElementById("content").replaceChildren()
     document.getElementById("content").appendChild(renderIdentityLayout())
 })
@@ -86,8 +85,6 @@ function createAddButton(identity,onclick) {
             content = JSON.stringify({target: target.Account, maintainer: false,ush:true,character:false})
             tags = makeTags(pubkey, "identity")
             sendEventToRocket(content, tags, 640402, pubkey).then(x =>{
-                // location.reload()
-                console.log(x,'undefined?')
             if (reload) {location.reload()}
 
             });
