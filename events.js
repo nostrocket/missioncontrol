@@ -70,39 +70,37 @@ function createAddButton(identity,onclick) {
     const button = document.createElement("button");
     button.id = identity.Account+'_button'
     // Set some properties for the button
-    button.textContent = "Add";
-    button.style.backgroundColor = "blue";
-    button.style.color = "white";
-    
-    // Add an event listener to the button
-    button.onclick = function() { 
-    if (pubkeyInIdentity(pubkey)) {
-        const USH = identities().find(x => x.Account === pubkey).UniqueSovereignBy
-        if (USH != null && USH !== '') {
-            const Account = this.id.substring(0, this.id.indexOf("_"));
-            const target = identities().find(x => x.Account === Account)
-            
-            content = JSON.stringify({target: target.Account, maintainer: false,ush:true,character:false})
-            tags = makeTags(pubkey, "identity")
-            sendEventToRocket(content, tags, 640402, pubkey).then(x =>{
-            if (reload) {location.reload()}
+    button.textContent = "Add to Identity Tree";
 
-            });
-        }else{
+    // Add an event listener to the button
+    button.onclick = function () {
+        if (pubkeyInIdentity(pubkey)) {
+            const USH = identities().find(x => x.Account === pubkey).UniqueSovereignBy
+            if (USH != null && USH !== '') {
+                addToIdentityTree(identity.Account)
+            } else {
+                alert("You need to be at Identity Tree first to add others identity.")
+            }
+        } else {
             alert("You need to be at Identity Tree first to add others identity.")
-            return
         }
-    } else{
-        alert("You need to be at Identity Tree first to add others identity.")
-        return 
-    }  
-    
-}
+
+    }
     
     // Return the button object
     return button;
   }
 
+async function addToIdentityTree(account) {
+    console.log(account)
+    content = JSON.stringify({target: account, maintainer: false, ush: true, character: false})
+    tags = makeTags(pubkey, "identity")
+    let unsigned = makeUnsignedEvent(content, tags, 640402, pubkey)
+    signAsynchronously(unsigned).then(signed => {
+        console.log(signed)
+        publish(signed)
+    })
+}
 
 function makePerson(identity) {
     let p = document.createElement("div")

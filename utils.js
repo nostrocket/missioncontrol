@@ -40,28 +40,15 @@ let event = {
 function publish(signed){
     let pubs = pool.publish([...relays, 'wss://nostr.688.org'], signed)
     pubs.on('ok', () => {
+        console.log("published")
         // this may be called multiple times, once for every relay that accepts the event
         return 'ok!'
       })
-    pubs.on('failed', reason => {
-        console.log(`failed to publish to {relay.url}: ${reason}`)
-        return 'failed'
+    pubs.on('failed', relay => {
+        console.log(`failed to publish event to: ${relay}`)
+        return false
       })
 
 }
-
-
-
-async function sendEventToRocket(content, tags, kind, pubkey) {
-    let et = makeUnsignedEvent(content, tags, kind, pubkey)
-
-    et.then((result)=>{
-        publish(result);
-        return result
-    })
-
-
-}
-
 
 

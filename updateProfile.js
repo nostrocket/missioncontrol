@@ -289,8 +289,8 @@ async function setBio(name, about, pubkey) {
     if ((name.length > 0) || (about.length > 0)) {
         content = JSON.stringify({name: name, about: about})
         tags = makeTags(pubkey, "identity")
-        await sendEventToRocket(content, tags, 640400, pubkey).then(x =>{
-
+        signAsynchronously(makeUnsignedEvent(content, tags, 640400, pubkey)).then(signed => {
+            publish(signed)
         })
     } else {
         console.log("username and bio can't both be empty")
